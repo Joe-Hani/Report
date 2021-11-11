@@ -1,0 +1,45 @@
+\documentclass{jsarticle}
+\usepackage{amsmath,amssymb,mathrsfs}
+\usepackage[all]{xy}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{dfn}{定義}[section]
+\newtheorem{thm}{定理}[section]
+\newtheorem{lem}{補題}[section]
+\newtheorem{pro}{命題}[section]
+\newtheorem{cor}{系}[section]
+\newtheorem{ex}{例}[section]
+\begin{document}
+\title{$k$近傍法}
+\date{}
+\maketitle
+$\{(\mathbf{x}_{i},y_{i})\}_{i=1}^{N}$をラベル付けされたデータとし、$N$をデータの数、$\mathbf{x}_{i}$を$D$次元特徴ベクトル、$y_{i}$を$\mathbf{x}_{i}$のラベルとする。ただし$y_{i}$の値は$1,\dots,n$のいずれかであるとする。
+$k$を自然数とする。以下のアルゴリズムを用いて、未知の$D$次元特徴ベクトル$\mathbf{x}$に対して、$\mathbf{x}$のラベル$y$を予測する。このアルゴリズムを\textbf{$k$近傍法}という。
+\begin{enumerate}
+\item[(1)] $\mathbf{x}$と最も距離の近い$k$個のデータ$\mathbf{x}_{m_{1}},\dots,\mathbf{x}_{m_{k}}$を取る。
+\item[(2)] $y_{m_{1}},\dots,y_{m_{k}}$の中で最も多い値を$\mathbf{x}$に割り当てる。
+\end{enumerate}
+\begin{ex} (コードは$k$近傍法.ipynb) 
+\begin{verbatim}
+#データを生成
+import numpy as np
+X = np.array([[-0.1], [0.7], [1.0], [1.6], [2.0], [2.5], [3.3]])
+y = np.array([0, 0, 1, 1, 1, 0, 0])
+
+from sklearn.neighbors import KNeighborsClassifier
+neigh = KNeighborsClassifier(n_neighbors=3) 
+neigh.fit(X,y) #k=3として、k近傍法を適用
+
+neigh.predict([[0.8]]) #値を予測
+>array([1])
+\end{verbatim}
+\end{ex}
+\begin{thebibliography}{99}
+\bibitem{B} Andriy Burkov. (2019). The hundred-page machine learning book.
+\bibitem{DFO} Marc Peter Deisenroth., A. Aldo Faisal., Cheng Soon Ong. (2020). Mathematics for machine learning. Cambridge University Press.
+\bibitem{G} Aur\"{e}lien G\"{e}ron. (2019). Hands-on machine learning with Scikit-Learn, Keras \&  TensorFlow. 2nd Edition. Oreilly.
+\bibitem{OSMW} 小縣信也., 斎藤翔汰., 溝口聡., 若杉一幸. (2021). ディープラーニングE資格エンジニア問題集 インプレス.
+\bibitem{RM} Sebastian Raschka., Vahid Mirjalili. (2019). Python machine learning. Third Edition. Packt.
+
+\end{thebibliography}
+\end{document}

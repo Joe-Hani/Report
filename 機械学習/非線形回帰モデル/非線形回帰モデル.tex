@@ -1,0 +1,63 @@
+\documentclass{jsarticle}
+\usepackage{amsmath,amssymb,mathrsfs}
+\usepackage[all]{xy}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{dfn}{定義}[section]
+\newtheorem{thm}{定理}[section]
+\newtheorem{lem}{補題}[section]
+\newtheorem{pro}{命題}[section]
+\newtheorem{cor}{系}[section]
+\newtheorem{ex}{例}[section]
+\begin{document}
+\title{非線形回帰モデル}
+\date{}
+\maketitle
+$\{(\mathbf{x}_{i},y_{i})\}_{i=1}^{N}$をラベル付けされたデータとし、$N$をデータの数、$\mathbf{x}_{i}$を$D$次元特徴ベクトル、$y_{i}$を$\mathbf{x}_{i}$のラベルとする。$\mathbf{w}$を$D^{\prime}$次元ベクトル、$b$を実数、
+$\phi:\mathbb{R}^{D}\rightarrow \mathbb{R}^{D^{\prime}}$を非線形関数とする。
+\begin{equation*}
+f_{\mathbf{w},b}(\mathbf{x}):=\mathbf{w}\phi(\mathbf{x})+b
+\end{equation*}
+とおく。この式を用いて、未知の$D$次元特徴ベクトル$\mathbf{x}$に対して、ラベル$y=f_{\mathbf{w},b}(\mathbf{x})$を予測する。最適な$\mathbf{w},b$は
+\begin{equation*}
+\min_{\mathbf{w},b}\frac{1}{N}\sum_{i=1}^{N}(f_{\mathbf{w},b}(\mathbf{x}_{i})-y_{i})^{2}
+\end{equation*}
+で求められる。$\phi$は\textbf{基底関数}と呼ばれる。
+\begin{ex} (コードは非線形回帰モデル.ipynb) $D=1,\phi(x)=(x,x^{2})$である場合を考える。
+\begin{verbatim}
+#データを生成
+import numpy as np
+m = 100
+X = 6 * np.random.rand(m, 1) - 3
+y = 0.5 * X**2 + X + 2 + np.random.randn(m, 1)
+
+from sklearn.preprocessing import PolynomialFeatures
+poly_features = PolynomialFeatures(degree=2, include_bias=False)
+X_poly = poly_features.fit_transform(X) # φによって、データxを(x,x^{2})に変換
+
+X[0] #変換前のデータ
+> array([1.32268224])
+
+X_poly[0] #変換後のデータ
+>array([1.32268224, 1.7494883 ])
+
+from sklearn.linear_model import LinearRegression
+lin_reg = LinearRegression() #線形回帰モデルを選択
+lin_reg.fit(X_poly, y) #最適解を求める
+
+lin_reg.coef_ #wの最適解
+>array([[0.94041935, 0.49876073]])
+
+lin_reg.intercept_ #bの最適解
+>array([1.98435621])
+\end{verbatim}
+\end{ex}
+\begin{thebibliography}{99}
+\bibitem{B} Andriy Burkov. (2019). The hundred-page machine learning book.
+\bibitem{DFO} Marc Peter Deisenroth., A. Aldo Faisal., Cheng Soon Ong. (2020). Mathematics for machine learning. Cambridge University Press.
+\bibitem{G} Aur\"{e}lien G\"{e}ron. (2019). Hands-on machine learning with Scikit-Learn, Keras \&  TensorFlow. 2nd Edition. Oreilly.
+\bibitem{OSMW} 小縣信也., 斎藤翔汰., 溝口聡., 若杉一幸. (2021). ディープラーニングE資格エンジニア問題集 インプレス.
+\bibitem{RM} Sebastian Raschka., Vahid Mirjalili. (2019). Python machine learning. Third Edition. Packt.
+
+\end{thebibliography}
+\end{document}
